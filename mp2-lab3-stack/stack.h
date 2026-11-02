@@ -97,10 +97,13 @@ public:
     }
 
     T pop() {
-        if (IsEmpty) { throw "Stack is empty"; }
+        if (IsEmpty()) { throw "Stack is empty"; }
         else {
             top_i--;
             return pMem[top_i + 1];
         }
+    }
+    T Top() {
+        return pMem[top_i];
     }
 };
