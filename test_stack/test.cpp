@@ -57,7 +57,7 @@ TEST(Stack, can_get_element_from_top_stack)
 	ASSERT_EQ(st.Top(), 3);
 }
 
-TEST(Stack, can_compare_stack)
+TEST(Stack, can_compare_stack_true)
 {
 	Stack<int> st(3);
 	st.push(1);
@@ -68,4 +68,17 @@ TEST(Stack, can_compare_stack)
 	st1.push(2);
 	st1.push(3);
 	ASSERT_TRUE(st1 == st);
+}
+
+TEST(Stack, can_compare_stack_false)
+{
+	Stack<int> st(3);
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	Stack<int> st1(3);
+	st1.push(1);
+	st1.push(2);
+	st1.push(3);
+	ASSERT_FALSE(st1 != st);
 }

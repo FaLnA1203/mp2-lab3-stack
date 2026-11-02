@@ -72,7 +72,7 @@ public:
         return true;
     }
 
-    bool operator!=(const Stack& st) const noexcept {
+    bool operator!=(const Stack<T>& st) {
         return !(*this == st);
     }
 
