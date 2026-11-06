@@ -1,7 +1,10 @@
 #pragma once
 
+#pragma once
+#include <iostream>
+
 template <typename T>
-class Stack{
+class Stack {
     int top_i, size;
     T* pMem;
 public:
@@ -9,18 +12,69 @@ public:
         pMem = new T[size];
     }
     ~Stack() {
+        size = 0;
+        top_i = -1;
         delete[] pMem;
     }
 
-    Stack(const Stack& s);
+    Stack(const Stack& st) {
+        size = st.size;
+        top_i = st.top_i;
+        pMem = new T[size];
+        for (int i = 0; i <= top_i; i++) {
+            pMem[i] = st.pMem[i];
+        }
+    }
 
-    Stack(Stack&& s) noexcept;
+    Stack(Stack&& st) {
+        size = st.size;
+        pMem = new T[size];
+        top_i = st.top_i;
+        for (int i = 0; i <= top_i; i++) {
+            pMem[i] = st.pMem[i];
+        }
+    }
 
-    Stack<T>& operator=(const Stack <T>& st);
+    Stack<T>& operator=(const Stack <T>& st) {
+        if (&st == this) {
+            if (this->size = st.size) {
+                size = st.size;
+                delete[] pMem;
+                pMem = new T[size];
+            }
+            top_i = st.top_i;
+            for (int i = 0; i < top_i; i++) {
+                pMem[i] = st.pMem[i];
+            }
+        }
+        return *this;
+    }
 
-    Stack<T>& operator=(Stack&& st) noexcept;
+    Stack& operator=(Stack&& st) noexcept {
+        if (this != &st) {
+            delete[] pMem;
+            pMem = st.pMem;
+            size = st.size;
+            top_i = st.top_i;
+            st.pMem = nullptr;
+            st.size = 0;
+            st.top_i = -1;
+        }
+        return *this;
+    }
 
-    bool operator==(const Stack <T>& st);
+    bool operator==(const Stack <T>& st) {
+        if (size != st.size) return false;
+        if (top_i != st.top_i) return false;
+        for (int i = 0; i <= top_i; i++) {
+            if (pMem[i] != st.pMem[i]) return false;
+        }
+        return true;
+    }
+
+    bool operator!=(const Stack<T>& st) {
+        return !(*this == st);
+    }
 
     bool IsFull() {
         return top_i == size - 1;
@@ -29,11 +83,27 @@ public:
         return top_i == -1;
     }
 
-    void Clear() {
-        top = -1;
+    void Clear() noexcept {
+        top_i = -1;
     }
 
-    void push(T el);
 
-    T pop();
+    void push(T el) {
+        if (IsFull()) { throw "Stack is full"; }
+        else {
+            top_i++;
+            pMem[top_i] = el;
+        }
+    }
+
+    T pop() {
+        if (IsEmpty()) { throw "Stack is empty"; }
+        else {
+            top_i--;
+            return pMem[top_i + 1];
+        }
+    }
+    T Top() {
+        return pMem[top_i];
+    }
 };

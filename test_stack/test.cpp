@@ -1,0 +1,84 @@
+#include "pch.h"
+#include "../mp2-lab3-stack/stack.h"
+
+TEST(Stack, can_create_stack_with_positive_length)
+{
+	ASSERT_NO_THROW(Stack<int> st(3));
+}
+
+TEST(Stack, can_create_stack_with_negative_length)
+{
+	ASSERT_ANY_THROW(Stack<int> st(-2));
+}
+
+TEST(Stack, can_extract_element_from_top_stack)
+{
+	Stack<int> st(3);
+	st.push(1);
+	ASSERT_EQ(st.pop(), 1);
+}
+
+TEST(Stack, can_create_copied_stack)
+{
+	Stack<int> st(5);
+	ASSERT_NO_THROW(Stack<int> st1(st));
+}
+
+TEST(Stack, can_create_assidment_stack)
+{
+	Stack<int> st(5);
+	Stack<int> st1(5);
+	st.push(1);
+	st.push(2);
+	st1 = st;
+	ASSERT_EQ(st.pop(), 2);
+	ASSERT_EQ(st.pop(), 1);
+}
+
+TEST(Stack, can_extract_from_empty_stack) {
+	Stack<int> st(5);
+	ASSERT_ANY_THROW(st.pop());
+}
+
+TEST(Stack, can_push_from_full_stack) {
+	Stack<int> st(3);
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	ASSERT_ANY_THROW(st.push(4));
+}
+
+TEST(Stack, can_get_element_from_top_stack)
+{
+	Stack<int> st(3);
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	ASSERT_EQ(st.Top(), 3);
+}
+
+TEST(Stack, can_compare_stack_true)
+{
+	Stack<int> st(3);
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	Stack<int> st1(3);
+	st1.push(1);
+	st1.push(2);
+	st1.push(3);
+	ASSERT_TRUE(st1 == st);
+}
+
+TEST(Stack, can_compare_stack_false)
+{
+	Stack<int> st(3);
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	Stack<int> st1(3);
+	st1.push(1);
+	st1.push(2);
+	st1.push(3);
+	ASSERT_FALSE(st1 != st);
+}
