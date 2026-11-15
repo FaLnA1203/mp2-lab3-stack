@@ -45,7 +45,7 @@ TEST(Stack, can_push_from_full_stack) {
 	st.push(1);
 	st.push(2);
 	st.push(3);
-	ASSERT_ANY_THROW(st.push(4));
+	ASSERT_NO_THROW(st.push(4));
 }
 
 TEST(Stack, can_get_element_from_top_stack)

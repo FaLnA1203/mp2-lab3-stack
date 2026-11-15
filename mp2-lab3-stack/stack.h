@@ -5,10 +5,23 @@
 
 template <typename T>
 class Stack {
+    static constexpr unsigned int maxValue = UINT_MAX;
     int top_i, size;
     T* pMem;
+
+    void resize() {
+        int new_size = (size == 0) ? 1 : size * 2;
+        T* new_pMem = new T[new_size];
+        for (int i = 0; i <= top_i; i++) {
+            new_pMem[i] = pMem[i];
+        }
+        delete[] pMem;
+        pMem = new_pMem;
+        size = new_size;
+    }
 public:
     Stack(int _size = 1) : top_i(-1), size(_size) {
+        if (_size <= 0 || _size > UINT_MAX) throw "íåêîððåêòíûé ðàçìåð";
         pMem = new T[size];
     }
     ~Stack() {
@@ -17,7 +30,7 @@ public:
         delete[] pMem;
     }
 
-    Stack(const Stack& st) {
+    Stack(const Stack& st) noexcept {
         size = st.size;
         top_i = st.top_i;
         pMem = new T[size];
@@ -26,26 +39,24 @@ public:
         }
     }
 
-    Stack(Stack&& st) {
+    Stack(Stack&& st) noexcept {
         size = st.size;
-        pMem = new T[size];
         top_i = st.top_i;
-        for (int i = 0; i <= top_i; i++) {
-            pMem[i] = st.pMem[i];
-        }
+        pMem = st.pMem;
+        st.pMem = nullptr;
+        st.size = 0;
+        st.top_i = -1;
     }
 
-    Stack<T>& operator=(const Stack <T>& st) {
-        if (&st == this) {
-            if (this->size = st.size) {
-                size = st.size;
-                delete[] pMem;
-                pMem = new T[size];
-            }
+
+    Stack<T>& operator=(const Stack<T>& st) {
+        if (this != &st) {
+            T* newMem = new T[st.size];
+            for (int i = 0; i <= st.top_i; i++) newMem[i] = st.pMem[i];
+            delete[] pMem;
+            pMem = newMem;
+            size = st.size;
             top_i = st.top_i;
-            for (int i = 0; i < top_i; i++) {
-                pMem[i] = st.pMem[i];
-            }
         }
         return *this;
     }
@@ -63,7 +74,7 @@ public:
         return *this;
     }
 
-    bool operator==(const Stack <T>& st) {
+    bool operator==(const Stack <T>& st) const {
         if (size != st.size) return false;
         if (top_i != st.top_i) return false;
         for (int i = 0; i <= top_i; i++) {
@@ -72,14 +83,14 @@ public:
         return true;
     }
 
-    bool operator!=(const Stack<T>& st) {
+    bool operator!=(const Stack& st) const noexcept {
         return !(*this == st);
     }
 
-    bool IsFull() {
+    bool IsFull() const {
         return top_i == size - 1;
     }
-    bool IsEmpty() {
+    bool IsEmpty() const {
         return top_i == -1;
     }
 
@@ -88,22 +99,26 @@ public:
     }
 
 
-    void push(T el) {
-        if (IsFull()) { throw "Stack is full"; }
-        else {
-            top_i++;
-            pMem[top_i] = el;
+    void push(const T& el) {
+        if (IsFull()) {
+            resize();
         }
+        pMem[++top_i] = el;
     }
 
     T pop() {
-        if (IsEmpty()) { throw "Stack is empty"; }
+        if (IsEmpty()) { throw "Ñòåê ïóñò"; }
         else {
             top_i--;
             return pMem[top_i + 1];
         }
     }
-    T Top() {
+
+    T Top() const {
+        if (IsEmpty()) throw "Ñòåê ïóñò";
         return pMem[top_i];
+    }
+    void clear() noexcept {
+        top_i = -1;
     }
 };
