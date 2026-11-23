@@ -104,3 +104,10 @@ TEST(CalculatorTest, Throws_On_Invalid_Expression_Missing_Operand) {
     calc.ToPostfix();
     EXPECT_THROW(calc.CalcPostfix(), const char*);
 }
+
+TEST(CalculatorTest, Can_Process_Long_Expressions) {
+    Calculator calc;
+    calc.SetInfix("2+4+(8-2)*34/52-(42+67)");
+    calc.ToPostfix();
+    EXPECT_DOUBLE_EQ(floor(calc.CalcPostfix()), -100.0);
+}
